@@ -33,7 +33,7 @@ namespace Widox.Api.Controllers
         }
 
         [HttpPost]
-        [Route("login")]
+        [Route("Login")]
         [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
@@ -55,23 +55,23 @@ namespace Widox.Api.Controllers
 
                 var token = GetToken(authClaims);
 
-                return Ok(new
+                return Ok(new WidoxAuthenticationResponse()
                 {
-                    token = new JwtSecurityTokenHandler().WriteToken(token),
-                    expiration = token.ValidTo
+                    Token = new JwtSecurityTokenHandler().WriteToken(token),
+                    ValidTo = token.ValidTo
                 });
             }
             return Unauthorized();
         }
 
         [HttpPost]
-        [Route("register")]
+        [Route("Register")]
         [AllowAnonymous]
         public async Task<IActionResult> Register([FromBody] RegisterModel model)
         {
             var userExists = await _userManager.FindByNameAsync(model.Username);
             if (userExists != null)
-                return StatusCode(StatusCodes.Status500InternalServerError, new AuthenticationResponse { Status = "Error", Message = "User already exists!" });
+                return StatusCode(StatusCodes.Status500InternalServerError, new WidoxResponse { Status = "Error", Message = "User already exists!" });
 
             WidoxUser user = new()
             {
@@ -81,19 +81,19 @@ namespace Widox.Api.Controllers
             };
             var result = await _userManager.CreateAsync(user, model.Password);
             if (!result.Succeeded)
-                return StatusCode(StatusCodes.Status500InternalServerError, new AuthenticationResponse { Status = "Error", Message = "User creation failed! Please check user details and try again." });
+                return StatusCode(StatusCodes.Status500InternalServerError, new WidoxResponse { Status = "Error", Message = "User creation failed! Please check user details and try again." });
 
-            return Ok(new AuthenticationResponse { Status = "Success", Message = "User created successfully!" });
+            return Ok(new WidoxResponse { Status = "Success", Message = "User created successfully!" });
         }
 
         [HttpPost]
-        [Route("register-admin")]
+        [Route("RegisterAdmin")]
         [Authorize(Roles = UserRoles.SuperAdmin)]
         public async Task<IActionResult> RegisterAdmin([FromBody] RegisterModel model)
         {
             var userExists = await _userManager.FindByNameAsync(model.Username);
             if (userExists != null)
-                return StatusCode(StatusCodes.Status500InternalServerError, new AuthenticationResponse { Status = "Error", Message = "User already exists!" });
+                return StatusCode(StatusCodes.Status500InternalServerError, new WidoxResponse { Status = "Error", Message = "User already exists!" });
 
             WidoxUser user = new()
             {
@@ -103,7 +103,7 @@ namespace Widox.Api.Controllers
             };
             var result = await _userManager.CreateAsync(user, model.Password);
             if (!result.Succeeded)
-                return StatusCode(StatusCodes.Status500InternalServerError, new AuthenticationResponse { Status = "Error", Message = "User creation failed! Please check user details and try again." });
+                return StatusCode(StatusCodes.Status500InternalServerError, new WidoxResponse { Status = "Error", Message = "User creation failed! Please check user details and try again." });
 
             if (!await _roleManager.RoleExistsAsync(UserRoles.Admin))
                 await _roleManager.CreateAsync(new WidoxRole(UserRoles.Admin));
@@ -120,7 +120,7 @@ namespace Widox.Api.Controllers
             {
                 await _userManager.AddToRoleAsync(user, UserRoles.User);
             }
-            return Ok(new AuthenticationResponse { Status = "Success", Message = "User created successfully!" });
+            return Ok(new WidoxResponse { Status = "Success", Message = "User created successfully!" });
         }
 
         private JwtSecurityToken GetToken(List<Claim> authClaims)

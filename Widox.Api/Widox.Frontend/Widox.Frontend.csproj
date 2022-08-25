@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>e92f4577-c8f4-4f28-af14-d16291a5ce63</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.15.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Widox.Enums\Widox.Enums.csproj" />
+    <ProjectReference Include="..\Widox.Frontend.Authentication\Widox.Frontend.Authentication.csproj" />
+    <ProjectReference Include="..\Widox.Models.Frontend\Widox.Models.Frontend.csproj" />
+    <ProjectReference Include="..\Widox.Models\Widox.Models.csproj" />
+  </ItemGroup>
+
+</Project>

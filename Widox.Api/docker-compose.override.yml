@@ -9,8 +9,18 @@ services:
       - "80"
       - "443"
     volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+      - ${APPDATA}/Microsoft/UserSecrets/WidoxApi:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https/WidoxApi:/root/.aspnet/https:ro
+  widox.frontend:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+    ports:
+      - "80"
+      - "443"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets/WidoxFrontend:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https/WidoxFrontend:/root/.aspnet/https:ro
   db:
     volumes: 
         - ${APPDATA}/Widox/postgres-data:/var/lib/postgresql/data

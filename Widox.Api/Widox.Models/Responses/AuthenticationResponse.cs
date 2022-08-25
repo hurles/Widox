@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Widox.Models.Responses
 {
-    public class AuthenticationResponse
+    public class WidoxAuthenticationResponse
     {
-        public string? Status { get; set; }
-        public string? Message { get; set; }
+        public string? Token { get; set; }
+        public DateTime? ValidTo { get; set; }
     }
 }

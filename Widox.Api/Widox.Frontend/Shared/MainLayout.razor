@@ -1,0 +1,55 @@
+﻿@using Widox.Frontend.Authentication.Services
+@using Widox.Frontend.Pages.Components
+@inherits LayoutComponentBase
+
+@inject AuthenticationStateProvider _authenticationStateProvider
+@inject IAuthStateCache _authStateCache
+
+<PageTitle>Widox.Frontend</PageTitle>
+
+<div class="page">
+    <div class="sidebar">
+        <NavMenu />
+    </div>
+
+    <main>
+        <div class="top-row px-4">
+            <LoginDisplay/>
+            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+        </div>
+
+        <article class="content px-4">
+            @Body
+        </article>
+    </main>
+</div>
+
+@code{
+
+    private bool _sessionTimeOut;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _authenticationStateProvider.AuthenticationStateChanged += async e => await OnAuthStateChanged(e);
+    }
+
+    private async Task OnAuthStateChanged(Task<AuthenticationState> task)
+    {
+        var result = await task;
+        var sid = result.User.Claims
+            .Where(c => c.Type.Equals("jti"))
+            .Select(c => c.Value)
+            .FirstOrDefault();
+        if (sid == null)
+        {
+            _sessionTimeOut = true;
+            await InvokeAsync(StateHasChanged);
+        }
+        else if (sid != null && _authStateCache.HasSubjectId(sid))
+        {
+            var now = DateTimeOffset.Now;
+            var session = _authStateCache.GetAuthStateFromCache(sid);
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+}

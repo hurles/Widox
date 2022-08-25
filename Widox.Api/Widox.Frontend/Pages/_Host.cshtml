@@ -1,0 +1,13 @@
+﻿@page "/"
+@namespace Widox.Frontend.Pages
+
+@using Widox.Frontend.Authentication.PageModels
+
+@model _HostAuthModel
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = "_Layout";
+}
+
+<component type="typeof(App)" render-mode="ServerPrerendered" />

@@ -1,0 +1,16 @@
+﻿<div class="login-display">
+    <AuthorizeView>
+        <Authorized>
+            <a href="#">Hello, @context.User.Identity?.Name!</a>
+            <a href="LogOut">Log out</a>
+        </Authorized>
+        <NotAuthorized>
+            <a href="Login">Log in</a>
+        </NotAuthorized>
+    </AuthorizeView>
+</div>
+
+
+@code {
+
+}

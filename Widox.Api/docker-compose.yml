@@ -1,6 +1,18 @@
 version: '3.4'
 
 services:
+  widox.frontend:
+    container_name: widox.frontend
+    image: ${DOCKER_REGISTRY-}widoxfrontend
+    build:
+      context: .
+      dockerfile: Widox.frontend/Dockerfile
+    networks: 
+        - widox-network-frontend
+        - widox-network-api
+    volumes:
+      - /opt/widoxfrontend/user-aspnet-secrets:/root/.microsoft/usersecrets:ro
+      - /opt/widoxfrontend/user-aspnet:/root/.aspnet/https:ro 
   widox.api:
     container_name: widox.api
     image: ${DOCKER_REGISTRY-}widoxapi
@@ -11,8 +23,8 @@ services:
         - widox-network-db
         - widox-network-api
     volumes:
-      - /opt/widox/user-aspnet-secrets:/root/.microsoft/usersecrets:ro
-      - /opt/widox/user-aspnet:/root/.aspnet/https:ro 
+        - /opt/widox/user-aspnet-secrets:/root/.microsoft/usersecrets:ro
+        - /opt/widox/user-aspnet:/root/.aspnet/https:ro 
   db:
     image: postgres
     restart: always
@@ -21,12 +33,13 @@ services:
       POSTGRES_USER: widox_admin
       POSTGRES_PASSWORD: Secret01!
     networks: 
-        - widox-network-db
-        
+        - widox-network-db       
     volumes:
-      - /opt/widox/postgres-data:/var/lib/postgresql/data
+        - /opt/widox/postgres-data:/var/lib/postgresql/data
 
 networks:
+    widox-network-frontend:
+        driver: bridge
     widox-network-db:
         driver: bridge
     widox-network-api:

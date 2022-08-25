@@ -8,6 +8,6 @@ namespace Widox.Configuration
 {
     public class WidoxConfiguration
     {
-
+        public string? WidoxApiUrl { get; set; }
     }
 }
